@@ -17,7 +17,7 @@ import Loader from "./components/UI/loader/loader";
 import { useFetching } from "./hooks/useFetching";
 import { getPageCount, getPagesArray } from "./utils/page";
 import Pagination from "./components/UI/pagination/pagination";
-
+import { useLoaderData, useNavigate, useParams} from "react-router-dom";
 
 
 function App() {
@@ -27,13 +27,16 @@ function App() {
         //{ id: 3, title: 'ииии 3', body: 'фыв' },
     ])
 
-    //const bodyInputRef = useRef();
+    const params = useParams();
+    
+    const page = params?.page ?? 1;
 
+    const navigate = useNavigate();
     const [filter, setFilter] = useState({ sort: '', query: '' });
     const [modal, setModal] = useState(false);
     const [totalPages, setTotalPages] = useState(0);
     const [limit, setLimit] = useState(10);
-    const [page, setPage] = useState(1);
+    //const [page, setPage] = useState(1);
     const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
     
 
@@ -46,6 +49,8 @@ function App() {
 
     useEffect(() => {
         fetchPosts();
+
+        return ()=>controller.abort()
     }, [page])
 
     const createPost = (newPost) => {
@@ -58,8 +63,8 @@ function App() {
     };
 
     const changePage = (page) => {
-        setPage(page);
-       
+        console.log(`/${page}`)
+        navigate(`/${page}`)    
     };
 
     return (
